@@ -28,6 +28,7 @@ import {
     CONFERENCE_WILL_JOIN,
     CONFERENCE_WILL_LEAVE,
     DATA_CHANNEL_OPENED,
+    ENDPOINT_MESSAGE_RECEIVED,
     KICKED_OUT,
     LOCK_STATE_CHANGED,
     P2P_STATUS_CHANGED,
@@ -39,7 +40,7 @@ import {
     SET_PASSWORD_FAILED,
     SET_RECEIVE_VIDEO_QUALITY,
     SET_ROOM,
-    SET_START_MUTED_POLICY
+    SET_START_MUTED_POLICY    
 } from './actionTypes';
 import {
     AVATAR_ID_COMMAND,
@@ -78,6 +79,10 @@ function _addConferenceListeners(conference, dispatch) {
     conference.on(
         JitsiConferenceEvents.CONFERENCE_LEFT,
         (...args) => dispatch(conferenceLeft(conference, ...args)));
+
+    // conference.on(
+    //     JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
+    //     (...args) => dispatch(endpointMessageReceived(conference, ...args)));
 
     conference.on(
         JitsiConferenceEvents.KICKED,
@@ -360,6 +365,30 @@ export function checkIfCanJoin() {
 export function dataChannelOpened() {
     return {
         type: DATA_CHANNEL_OPENED
+    };
+}
+
+/**
+ * Signals that an endpoint message sent by another participant on the data 
+ * channel is received.
+ *
+ * @param {JitsiConference} conference - The JitsiConference which had its lock
+ * state changed.
+ * @param {Object} participant - The participant details sending the message
+ * @param {Object} p - The payload carried in the message
+ * @returns {{
+ *      type: ENDPOINT_MESSAGE_RECEIVED,
+ *      conference: JitsiConference,
+ *      participant,
+ *      p
+ * }}
+ */
+export function endpointMessageReceived(conference: Object, participant:Object, p: Object) {
+    return {
+        type: ENDPOINT_MESSAGE_RECEIVED,
+        conference,
+        participant,
+        p
     };
 }
 

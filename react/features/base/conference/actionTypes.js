@@ -63,6 +63,19 @@ export const CONFERENCE_WILL_LEAVE = Symbol('CONFERENCE_WILL_LEAVE');
 export const DATA_CHANNEL_OPENED = Symbol('DATA_CHANNEL_OPENED');
 
 /**
+ * The type of (redux) action which indicates that an end point message
+ * sent by another participant to the data channel is received
+ *
+ * {
+ *     type: ENDPOINT_MESSAGE_RECEIVED,
+ *     conference: JitsiConference,
+ *     participant: Object,
+ *     p: Object 
+ * }
+ */
+export const ENDPOINT_MESSAGE_RECEIVED = Symbol('ENDPOINT_MESSAGE_RECEIVED');
+
+/**
  * The type of action which signals that the user has been kicked out from
  * the conference.
  *

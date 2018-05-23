@@ -7,6 +7,8 @@ import { Watermarks } from '../../base/react';
 
 import Labels from './Labels';
 
+import { TranscriptionSubtitles } from '../../transcription/';
+
 declare var interfaceConfig: Object;
 
 /**
@@ -73,6 +75,9 @@ export default class LargeVideo extends Component<*> {
                 <span id = 'localConnectionMessage' />
                 { this.props.hideVideoQualityLabel
                     ? null : <Labels /> }
+
+                <TranscriptionSubtitles />
+                
             </div>
         );
     }
