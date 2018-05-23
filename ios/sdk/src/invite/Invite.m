@@ -33,6 +33,13 @@ static NSString * const PerformQueryEmitterEvent
 
 RCT_EXPORT_MODULE();
 
+/**
+ * Make sure all methods in this module are invoked on the main/UI thread.
+ */
+- (dispatch_queue_t)methodQueue {
+    return dispatch_get_main_queue();
+}
+
 - (NSArray<NSString *> *)supportedEvents {
     return @[
         InviteEmitterEvent,

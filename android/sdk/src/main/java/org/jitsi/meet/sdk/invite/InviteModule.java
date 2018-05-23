@@ -22,6 +22,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.UiThreadUtil;
 
 import org.jitsi.meet.sdk.JitsiMeetView;
 
@@ -42,7 +43,19 @@ public class InviteModule extends ReactContextBaseJavaModule {
      * {@code JitsiMeetView} whose {@code InviteButton} was clicked/tapped.
      */
     @ReactMethod
-    public void beginAddPeople(String externalAPIScope) {
+    public void beginAddPeople(final String externalAPIScope) {
+        // Make sure InviteControllerListener (like all other listeners of the
+        // SDK) is invoked on the UI thread. It was requested by SDK consumers.
+        if (!UiThreadUtil.isOnUiThread()) {
+            UiThreadUtil.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    beginAddPeople(externalAPIScope);
+                }
+            });
+            return;
+        }
+
         InviteController inviteController
             = findInviteControllerByExternalAPIScope(externalAPIScope);
 
@@ -72,9 +85,25 @@ public class InviteModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void inviteSettled(
-            String externalAPIScope,
-            String addPeopleControllerScope,
-            ReadableArray failedInvitees) {
+            final String externalAPIScope,
+            final String addPeopleControllerScope,
+            final ReadableArray failedInvitees) {
+        // Make sure AddPeopleControllerListener (like all other listeners of
+        // the SDK) is invoked on the UI thread. It was requested by SDK
+        // consumers.
+        if (!UiThreadUtil.isOnUiThread()) {
+            UiThreadUtil.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    inviteSettled(
+                        externalAPIScope, 
+                        addPeopleControllerScope,
+                        failedInvitees);
+                }
+            });
+            return;
+        }
+
         InviteController inviteController
             = findInviteControllerByExternalAPIScope(externalAPIScope);
 
@@ -98,10 +127,27 @@ public class InviteModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void receivedResults(
-            String externalAPIScope,
-            String addPeopleControllerScope,
-            String query,
-            ReadableArray results) {
+            final String externalAPIScope,
+            final String addPeopleControllerScope,
+            final String query,
+            final ReadableArray results) {
+        // Make sure AddPeopleControllerListener (like all other listeners of
+        // the SDK) is invoked on the UI thread. It was requested by SDK
+        // consumers.
+        if (!UiThreadUtil.isOnUiThread()) {
+            UiThreadUtil.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    receivedResults(
+                        externalAPIScope,
+                        addPeopleControllerScope,
+                        query,
+                        results);
+                }
+            });
+            return;
+        }
+
         InviteController inviteController
             = findInviteControllerByExternalAPIScope(externalAPIScope);
 
