@@ -1,5 +1,4 @@
 // @flow
-
 import UIEvents from '../../../../service/UI/UIEvents';
 
 import {
@@ -80,9 +79,9 @@ function _addConferenceListeners(conference, dispatch) {
         JitsiConferenceEvents.CONFERENCE_LEFT,
         (...args) => dispatch(conferenceLeft(conference, ...args)));
 
-    // conference.on(
-    //     JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
-    //     (...args) => dispatch(endpointMessageReceived(conference, ...args)));
+    conference.on(
+        JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
+        (...args) => dispatch(endpointMessageReceived(conference, ...args)));
 
     conference.on(
         JitsiConferenceEvents.KICKED,
@@ -369,13 +368,12 @@ export function dataChannelOpened() {
 }
 
 /**
- * Signals that an endpoint message is received.
- * This was sent by another participant on the data channel.
+ * Signals that a participant sent an endpoint message on the data channel.
  *
  * @param {JitsiConference} conference - The JitsiConference which had its lock
  * state changed.
- * @param {Object} participant - The participant details sending the message
- * @param {Object} p - The payload carried in the message
+ * @param {Object} participant - The participant details sending the message.
+ * @param {Object} p - The payload carried in the message.
  * @returns {{
  *      type: ENDPOINT_MESSAGE_RECEIVED,
  *      conference: JitsiConference,

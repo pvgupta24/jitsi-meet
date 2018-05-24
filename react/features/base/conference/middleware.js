@@ -28,7 +28,7 @@ import {
 import {
     CONFERENCE_FAILED,
     CONFERENCE_JOINED,
-    DATA_CHANNEL_OPENED,
+    DATA_CHANNEL_OPENED, ENDPOINT_MESSAGE_RECEIVED,
     SET_AUDIO_ONLY,
     SET_LASTN,
     SET_RECEIVE_VIDEO_QUALITY,
@@ -64,6 +64,11 @@ MiddlewareRegistry.register(store => next => action => {
 
     case DATA_CHANNEL_OPENED:
         return _syncReceiveVideoQuality(store, next, action);
+
+    case ENDPOINT_MESSAGE_RECEIVED:
+        console.log('ENDPOINT Message Middleware function here');
+
+        return next(action);
 
     case PIN_PARTICIPANT:
         return _pinParticipant(store, next, action);

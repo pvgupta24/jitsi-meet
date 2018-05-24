@@ -11,6 +11,7 @@ import {
     CONFERENCE_LEFT,
     CONFERENCE_WILL_JOIN,
     CONFERENCE_WILL_LEAVE,
+    ENDPOINT_MESSAGE_RECEIVED,
     LOCK_STATE_CHANGED,
     P2P_STATUS_CHANGED,
     SET_AUDIO_ONLY,
@@ -48,6 +49,9 @@ ReducerRegistry.register('features/base/conference', (state = {}, action) => {
 
     case CONNECTION_WILL_CONNECT:
         return set(state, 'authRequired', undefined);
+
+    case ENDPOINT_MESSAGE_RECEIVED:
+        return _endpointMessageReceived(state, action);
 
     case LOCK_STATE_CHANGED:
         return _lockStateChanged(state, action);
@@ -282,6 +286,22 @@ function _conferenceWillLeave(state, { conference }) {
         leaving: conference,
         passwordRequired: undefined
     });
+}
+
+/**
+ * Reduces a specific Redux action ENDPOINT_MESSAGE_RECEIVED of the feature
+ * base/conference.
+ *
+ * @param {Object} state - The Redux state of the feature base/conference.
+ * @param {Action} action -The Redux action ENDPOINT_MESSAGE_RECEIVED to reduce.
+ * @returns {Object} The new state of the feature base/conference after the
+ * reduction of the specified action.
+ */
+function _endpointMessageReceived(state, { conference, participant, p }) {
+    console.log('EndPoint Message Received Listener Function');
+    console.log(conference, participant, p);
+
+    return state;
 }
 
 /**

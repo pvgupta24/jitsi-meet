@@ -41,6 +41,7 @@ type State = {
     * for their object to the state.
     */
     knownIDs: Array<string>
+
 };
 
 /**
@@ -106,7 +107,7 @@ class TranscriptionSubtitles extends React.Component<Props, State> {
             // if (m['jitsi-meet-muc-msg-topic'] === TRANSCRIPTION_RESULT_TOPIC
             //         && (p = m.payload))
             if (p.transcript) {
-                console.log('Correct Topic');
+                console.log('Payload Contains Transcript');
 
                 // Extract the useful data from the payload of the JSON message
                 const text = p.transcript[0].text;
@@ -185,8 +186,9 @@ class TranscriptionSubtitles extends React.Component<Props, State> {
     removeIDFromState(id) {
         this.setState(prevState => {
             const newKnownIDs = prevState.knownIDs.slice();
+            const indexToRemove = newKnownIDs.indexOf(id);
 
-            newKnownIDs.splice(newKnownIDs.find(element => element === id), 1);
+            newKnownIDs.splice(indexToRemove, 1);
 
             return {
                 knownIDs: newKnownIDs,
@@ -202,7 +204,7 @@ class TranscriptionSubtitles extends React.Component<Props, State> {
      * @inheritdoc
      */
     componentDidMount() {
-        this.addListener(this.props._conference);
+        // this.addListener(this.props._conference);
     }
 
     /**
@@ -212,7 +214,7 @@ class TranscriptionSubtitles extends React.Component<Props, State> {
      * @inheritdoc
      */
     componentWillUnmount() {
-        this.removeListener(this.props._conference);
+        // this.removeListener(this.props._conference);
     }
 
     /**
@@ -230,10 +232,11 @@ class TranscriptionSubtitles extends React.Component<Props, State> {
      */
     componentWillReceiveProps(nextProps) {
         if (nextProps._conference) {
-            this.addListener(nextProps._conference);
+            // this.addListener(nextProps._conference);
         }
         if (!nextProps._conference) {
-            this.removeListener(this.props._conference);
+            // this.removeListener(this.props._conference);
+
         }
     }
 
