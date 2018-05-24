@@ -40,7 +40,8 @@ import {
     conferenceWillJoin,
     dataChannelOpened,
     EMAIL_COMMAND,
-    endpointMessageReceived,
+
+    // endpointMessageReceived,
     lockStateChanged,
     onStartMutedPolicyChanged,
     p2pStatusChanged,

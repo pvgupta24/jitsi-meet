@@ -70,7 +70,7 @@ export const DATA_CHANNEL_OPENED = Symbol('DATA_CHANNEL_OPENED');
  *     type: ENDPOINT_MESSAGE_RECEIVED,
  *     conference: JitsiConference,
  *     participant: Object,
- *     p: Object 
+ *     p: Object
  * }
  */
 export const ENDPOINT_MESSAGE_RECEIVED = Symbol('ENDPOINT_MESSAGE_RECEIVED');

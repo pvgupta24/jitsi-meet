@@ -77,7 +77,7 @@ export default class LargeVideo extends Component<*> {
                     ? null : <Labels /> }
 
                 <TranscriptionSubtitles />
-                
+
             </div>
         );
     }

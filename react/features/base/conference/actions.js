@@ -40,7 +40,7 @@ import {
     SET_PASSWORD_FAILED,
     SET_RECEIVE_VIDEO_QUALITY,
     SET_ROOM,
-    SET_START_MUTED_POLICY    
+    SET_START_MUTED_POLICY
 } from './actionTypes';
 import {
     AVATAR_ID_COMMAND,
@@ -369,7 +369,7 @@ export function dataChannelOpened() {
 }
 
 /**
- * Signals that an endpoint message sent by another participant on the data 
+ * Signals that an endpoint message sent by another participant on the data
  * channel is received.
  *
  * @param {JitsiConference} conference - The JitsiConference which had its lock
@@ -383,7 +383,8 @@ export function dataChannelOpened() {
  *      p
  * }}
  */
-export function endpointMessageReceived(conference: Object, participant:Object, p: Object) {
+export function endpointMessageReceived(
+        conference: Object, participant: Object, p: Object) {
     return {
         type: ENDPOINT_MESSAGE_RECEIVED,
         conference,
