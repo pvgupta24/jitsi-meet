@@ -369,8 +369,8 @@ export function dataChannelOpened() {
 }
 
 /**
- * Signals that an endpoint message sent by another participant on the data
- * channel is received.
+ * Signals that an endpoint message is received.
+ * This was sent by another participant on the data channel.
  *
  * @param {JitsiConference} conference - The JitsiConference which had its lock
  * state changed.

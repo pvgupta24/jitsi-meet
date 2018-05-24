@@ -11,6 +11,38 @@ const ConferenceEvents = JitsiMeetJS.events.conference;
 // const TRANSCRIPTION_RESULT_TOPIC = 'transcription-result';
 const REMOVE_AFTER_MS = 3000;
 
+
+/**
+ * The type of the React {@code Component} props of
+ * {@link TranscriptionSubtitles}.
+ */
+type Props = {
+
+    /**
+     * The conference which we can use to add an EventListener to
+     */
+    _conference: Object
+
+};
+
+/**
+ * The type of the React {@code Component} state of
+ * {@link TranscriptionSubtitles}.
+ */
+type State = {
+
+    /**
+     * Whether or not the {@link TranscriptionSubtitles} should be invisible.
+     */
+    hidden: boolean,
+
+    /**
+    * An array of message ID's, which will be added as an variable name
+    * for their object to the state.
+    */
+    knownIDs: Array<string>
+};
+
 /**
  * React {@code Component} which can display speech-to-text results from
  * Jigasi as subtitles.
@@ -42,46 +74,16 @@ const REMOVE_AFTER_MS = 3000;
  * }
  *
  */
-class TranscriptionSubtitles extends React.Component {
+class TranscriptionSubtitles extends React.Component<Props, State> {
 
-    /**
-     * {@code TranscriptionSubtitles}'s property types.
-     *
-     * @static
-     */
     static propTypes = {
-
-        /**
-         * The conference which we can use to add an EventListener to
-         */
         _conference: PropTypes.object
     };
 
-    /**
-     * Initializes a new {@code TranscriptionSubtitles} instance.
-     *
-     * @param {Object} props - The read-only React Component props with which
-     * the new instance is to be initialized.
-     */
-    constructor(props) {
-        super(props);
-        this.state = {
-
-            /**
-             * An array of message ID's, which will be added as an variable name
-             * for their object to the state.
-             */
-            knownIDs: [],
-
-            hidden: false
-
-            /**
-             * The conference which has an EventEmitter for
-             * {@code ConferenceEvents.ENDPOINT_MESSAGE_RECEIVED}.
-             */
-            // conference: props._conference
-        };
-    }
+    state = {
+        hidden: false,
+        knownIDs: []
+    };
 
     /**
      * Callback Listener for {@code ConferenceEvents.ENDPOINT_MESSAGE_RECEIVED}
