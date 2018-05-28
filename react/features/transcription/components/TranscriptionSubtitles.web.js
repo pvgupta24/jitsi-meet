@@ -1,11 +1,10 @@
-// @flow
+
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // declare var JitsiMeetJS: Object;
-
 // const ConferenceEvents = JitsiMeetJS.events.conference;
 
 /**
@@ -74,8 +73,6 @@ class TranscriptionSubtitles extends React.Component<Props, State> {
 
     state = {
         hidden: false
-
-        // knownIDs: []
     };
 
     /**
@@ -105,7 +102,7 @@ class TranscriptionSubtitles extends React.Component<Props, State> {
  * @param {Object} state - The Redux state.
  * @private
  * @returns {{
- // *     _conference: Object,
+ *     _conference: Object,
  *     transcriptionSubtitles: string
  * }}
  */

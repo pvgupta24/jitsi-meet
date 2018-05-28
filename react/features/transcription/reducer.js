@@ -7,20 +7,25 @@ import {
 import { ReducerRegistry } from '../base/redux';
 import React from 'react';
 
-
+/**
+ * Default State for 'features/transcription' feature
+ */
 const defaultState = {
     // participantIDs: [],
     transcriptMessages: {},
-    transcriptionSubtitles: ''
+    transcriptionSubtitles: []
 };
 
 /**
- * Listen for actions for the transcription feature
+ * Listen for actions for the transcription feature to be used by the actions
+ * to update the rendered transcription subtitles.
  */
-ReducerRegistry.register('features/transcription', (state = defaultState, action) => {
+ReducerRegistry.register('features/transcription', (
+        state = defaultState, action) => {
+
     switch (action.type) {
     case ENDPOINT_MESSAGE_RECEIVED:
-        return _endpointMessageReceived(state, action);
+        return _endpointMessageReceived(state);
 
     case ADD_TRANSCRIPT_MESSAGE:
         return _addTranscriptMessage(state, action);
@@ -36,19 +41,17 @@ ReducerRegistry.register('features/transcription', (state = defaultState, action
 });
 
 /**
- * Reduces a specific Redux action ENDPOINT_MESSAGE_RECEIVED of the feature
- * base/conference.
+ * Reduces a specific Redux action ADD_TRANSCRIPT_MESSAGE of the feature
+ * transcription.
  *
- * @param {Object} state - The Redux state of the feature base/conference.
- * @param {Action} action -The Redux action ENDPOINT_MESSAGE_RECEIVED to reduce.
- * @returns {Object} The new state of the feature base/conference after the
+ * @param {Object} state - The Redux state of the feature transcription.
+ * @returns {Object} The new state of the feature transcription after the
  * reduction of the specified action.
  */
-function _endpointMessageReceived(state, action) {
+function _endpointMessageReceived(state) {
 
     const paragraphs = [];
 
-    console.log('Rendering Transcription Subtitles');
     Object.keys(state.transcriptMessages).forEach((id, index) => {
         console.log(id, index);
         const transcriptMessage = state.transcriptMessages[id];
@@ -60,8 +63,10 @@ function _endpointMessageReceived(state, action) {
             if (transcriptMessage.final) {
                 text += transcriptMessage.final;
             } else {
-                const stable = transcriptMessage.stable ? transcriptMessage.stable : '';
-                const unstable = transcriptMessage.unstable ? transcriptMessage.unstable : '';
+                const stable = transcriptMessage.stable
+                    ? transcriptMessage.stable : '';
+                const unstable = transcriptMessage.unstable
+                    ? transcriptMessage.unstable : '';
 
                 text += stable + unstable;
             }
@@ -76,33 +81,57 @@ function _endpointMessageReceived(state, action) {
     };
 }
 
-
-function _addTranscriptMessage(state, { transciptMessageID, participantName }) {
-    console.log('Adding Message');
+/**
+ * Reduces a specific Redux action ENDPOINT_MESSAGE_RECEIVED of the feature
+ * transcription.
+ *
+ * @param {Object} state - The Redux state of the feature transcription.
+ * @param {Action} action -The Redux action ENDPOINT_MESSAGE_RECEIVED to reduce.
+ * @returns {Object} The new state of the feature transcription after the
+ * reduction of the specified action.
+ */
+function _addTranscriptMessage(state, { transcriptMessageID, participantName }) {
 
     return {
         ...state,
         transcriptMessages: Object.assign({}, state.transcriptMessages,
-            { [transciptMessageID]: { participantName } })
+            { [transcriptMessageID]: { participantName } })
     };
 }
 
-function _updateTranscriptMessage(state, { transciptMessageID, newTranscriptMessage }) {
-    console.log('Updating Message');
+/**
+ * Reduces a specific Redux action UPDATE_TRANSCRIPT_MESSAGE of the feature
+ * transcription.
+ *
+ * @param {Object} state - The Redux state of the feature transcription.
+ * @param {Action} action -The Redux action UPDATE_TRANSCRIPT_MESSAGE to reduce.
+ * @returns {Object} The new state of the feature transcription after the
+ * reduction of the specified action.
+ */
+function _updateTranscriptMessage(state,
+        { transcriptMessageID, newTranscriptMessage }) {
 
     return {
         ...state,
         transcriptMessages: Object.assign({}, state.transcriptMessages,
-        { [transciptMessageID]: newTranscriptMessage })
+        { [transcriptMessageID]: newTranscriptMessage })
     };
 }
 
-function _removeTranscriptMessage(state, { transciptMessageID }) {
-    console.log('Removing Message');
+/**
+ * Reduces a specific Redux action REMOVE_TRANSCRIPT_MESSAGE of the feature
+ * transcription.
+ *
+ * @param {Object} state - The Redux state of the feature transcription.
+ * @param {Action} action -The Redux action REMOVE_TRANSCRIPT_MESSAGE to reduce.
+ * @returns {Object} The new state of the feature transcription after the
+ * reduction of the specified action.
+ */
+function _removeTranscriptMessage(state, { transcriptMessageID }) {
 
     return {
         ...state,
         transcriptMessages: Object.assign({}, state.transcriptMessages,
-            { [transciptMessageID]: undefined })
+            { [transcriptMessageID]: undefined })
     };
 }

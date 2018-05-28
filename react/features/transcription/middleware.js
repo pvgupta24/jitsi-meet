@@ -1,6 +1,10 @@
 import { MiddlewareRegistry } from '../base/redux';
 import { ENDPOINT_MESSAGE_RECEIVED } from './actionTypes';
-import { addTranscriptMessage, removeTranscriptMessage, updateTranscriptMessage } from './actions';
+import {
+    addTranscriptMessage,
+    removeTranscriptMessage,
+    updateTranscriptMessage
+} from './actions';
 
 /**
 * Time after which the rendered subtitles will be removed.
@@ -8,9 +12,10 @@ import { addTranscriptMessage, removeTranscriptMessage, updateTranscriptMessage 
 const REMOVE_AFTER_MS = 3000;
 
 /**
- * Implements the middleware of the feature transcription.
+ * Middleware that catches actions related to transcript messages
+ * to be rendered in {@link TranscriptionSubtitles }
  *
- * @param {Store} store - The redux store.
+ * @param {Store} store - Redux store.
  * @returns {Function}
  */
 MiddlewareRegistry.register(store => next => action => {
@@ -30,18 +35,15 @@ MiddlewareRegistry.register(store => next => action => {
  *
  * @param {Store} store - The redux store in which the specified {@code action}
  * is being dispatched.
- * @param {Dispatch} next - The redux {@code dispatch} function to dispatch the
- * specified {@code action} to the specified {@code store}.
+ * @param {Dispatch} next - The redux {@code dispatch} function to
+ * dispatch the specified {@code action} to the specified {@code store}.
  * @param {Action} action - The redux action {@code ENDPOINT_MESSAGE_RECEIVED}
  * which is being dispatched in the specified {@code store}.
  * @private
  * @returns {Object} The value returned by {@code next(action)}.
  */
 function _endpointMessageReceived({ dispatch, getState }, next, action) {
-    console.log('ENDPOINT Middleware');
     const p = action.p;
-
-    console.log('onEndpointMessageReceived', p);
 
     try {
 
@@ -62,55 +64,63 @@ function _endpointMessageReceived({ dispatch, getState }, next, action) {
             const isInterim = p.is_interim;
             const transcriptMessageID = p.message_id;
             const participantName = p.participant.name;
-            const { transcriptMessages } = getState()['features/transcription'];
 
             // If this is the first result with the unique message ID,
             // we add it to the state along with the name of the participant
             // who said given text
-            if (!transcriptMessages[transcriptMessageID]) {
-                console.log('First Message by speaker');
-                dispatch(addTranscriptMessage(transcriptMessageID, participantName));
+            if (!getState()['features/transcription']
+                .transcriptMessages[transcriptMessageID]) {
+                dispatch(addTranscriptMessage(transcriptMessageID,
+                    participantName));
             }
 
             // If this is final result, update the state as a final result
             // and start a count down to remove the subtitle from the state
             if (!isInterim) {
-                console.log('Not Interim');
-                const { transcriptMessages } = getState()['features/transcription'];
-                const newTranscriptMessage = transcriptMessages[transcriptMessageID];
+                const { transcriptMessages }
+                    = getState()['features/transcription'];
+                const newTranscriptMessage
+                    = transcriptMessages[transcriptMessageID];
 
                 newTranscriptMessage.final = text;
-                dispatch(updateTranscriptMessage(transcriptMessageID, newTranscriptMessage));
+                dispatch(updateTranscriptMessage(transcriptMessageID,
+                    newTranscriptMessage));
 
                 setTimeout(() => {
                     dispatch(removeTranscriptMessage(transcriptMessageID));
                 }, REMOVE_AFTER_MS);
             } else if (stability > 0.85) {
-                console.log('High Stability');
 
                 // If the message has a high stability, we can update the
                 // stable field of the state and remove the previously
                 // unstable results
-                const newTranscriptMessage = transcriptMessages[transcriptMessageID];
+                const { transcriptMessages }
+                    = getState()['features/transcription'];
+                const newTranscriptMessage
+                    = transcriptMessages[transcriptMessageID];
 
                 newTranscriptMessage.stable = text;
                 newTranscriptMessage.unstable = undefined;
-                dispatch(updateTranscriptMessage(transcriptMessageID, newTranscriptMessage));
+                dispatch(updateTranscriptMessage(transcriptMessageID,
+                    newTranscriptMessage));
             } else {
                 // Otherwise, this result has an unstable result, which we
                 // add to the state. The unstable result will be localed at
                 // the end of the String, after the stable part.
 
-                const { transcriptMessages } = getState()['features/transcription'];
-                const newTranscriptMessage = transcriptMessages[transcriptMessageID];
+                const { transcriptMessages }
+                    = getState()['features/transcription'];
+                const newTranscriptMessage
+                    = transcriptMessages[transcriptMessageID];
 
                 console.log(transcriptMessages, newTranscriptMessage);
                 newTranscriptMessage.unstable = text;
-                dispatch(updateTranscriptMessage(transcriptMessageID, newTranscriptMessage));
+                dispatch(updateTranscriptMessage(transcriptMessageID,
+                    newTranscriptMessage));
             }
         }
     } catch (error) {
-        console.log('error handling', p, error);
+        console.log('Error Occurred while updating transcriptions', error);
     }
     next(action);
 }

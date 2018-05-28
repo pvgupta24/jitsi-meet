@@ -1899,7 +1899,6 @@ export default {
         room.on(
             JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
             (...args) => {
-                console.log('ENDPOINT_MESSAGE_RECEIVED event binding', args);
                 APP.store.dispatch(endpointMessageReceived(room, ...args));
             });
 
