@@ -72,6 +72,7 @@ export default class LargeVideo extends Component<*> {
                             muted = { true } />
                     </div>
                 </div>
+                <TranscriptionSubtitles />
                 <span id = 'localConnectionMessage' />
                 { this.props.hideVideoQualityLabel
                     ? null : <Labels /> }

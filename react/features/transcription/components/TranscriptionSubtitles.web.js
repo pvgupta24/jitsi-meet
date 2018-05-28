@@ -110,7 +110,7 @@ function mapStateToProps(state) {
     return {
         // _conference: state['features/base/conference'].conference,
         transcriptionSubtitles:
-            state['features/transcription'].transcriptionSubtitles
+        state['features/transcription'].transcriptionSubtitles
     };
 }
 

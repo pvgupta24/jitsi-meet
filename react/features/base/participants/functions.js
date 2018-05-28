@@ -127,9 +127,7 @@ export function getLocalParticipant(stateful: Object | Function) {
  * @private
  * @returns {(Participant|undefined)}
  */
-export function getParticipantById(
-        stateful: Object | Function,
-        id: string) {
+export function getParticipantById(stateful: Object | Function, id: string) {
     const participants = _getAllParticipants(stateful);
 
     return participants.find(p => p.id === id);
@@ -180,6 +178,28 @@ export function getParticipantDisplayName(
     return typeof interfaceConfig === 'object'
         ? interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME
         : 'Fellow Jitster';
+}
+
+/**
+ * Returns the presence status of a participant associated with the passed id.
+ *
+ * @param {(Function|Object)} stateful - The (whole) redux state, or redux's
+ * {@code getState} function to be used to retrieve the state.
+ * @param {string} id - The id of the participant.
+ * @returns {string} - The presence status.
+ */
+export function getParticipantPresenceStatus(
+        stateful: Object | Function, id: string) {
+    if (!id) {
+        return undefined;
+    }
+    const participantById = getParticipantById(stateful, id);
+
+    if (!participantById) {
+        return undefined;
+    }
+
+    return participantById.presence;
 }
 
 /**
@@ -242,11 +262,8 @@ export function isLocalParticipantModerator(stateful: Object | Function) {
         return false;
     }
 
-    const isModerator = localParticipant.role === PARTICIPANT_ROLE.MODERATOR;
-
-    if (state['features/base/config'].enableUserRolesBasedOnToken) {
-        return isModerator && !state['features/base/jwt'].isGuest;
-    }
-
-    return isModerator;
+    return (
+        localParticipant.role === PARTICIPANT_ROLE.MODERATOR
+            && (!state['features/base/config'].enableUserRolesBasedOnToken
+                || !state['features/base/jwt'].isGuest));
 }
