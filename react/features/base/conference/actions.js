@@ -27,7 +27,6 @@ import {
     CONFERENCE_WILL_JOIN,
     CONFERENCE_WILL_LEAVE,
     DATA_CHANNEL_OPENED,
-    ENDPOINT_MESSAGE_RECEIVED,
     KICKED_OUT,
     LOCK_STATE_CHANGED,
     P2P_STATUS_CHANGED,
@@ -51,6 +50,7 @@ import {
     _addLocalTracksToConference,
     sendLocalParticipant
 } from './functions';
+import { endpointMessageReceived } from '../../transcription';
 
 import type { Dispatch } from 'redux';
 
@@ -79,6 +79,7 @@ function _addConferenceListeners(conference, dispatch) {
         JitsiConferenceEvents.CONFERENCE_LEFT,
         (...args) => dispatch(conferenceLeft(conference, ...args)));
 
+    // Dispatches into features/transcription follow:
     conference.on(
         JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
         (...args) => dispatch(endpointMessageReceived(conference, ...args)));
@@ -328,7 +329,7 @@ export function createConference() {
 
         conference[JITSI_CONFERENCE_URL_KEY] = locationURL;
         dispatch(_conferenceWillJoin(conference));
-
+        console.log('Calling _addConferenceListeners');
         _addConferenceListeners(conference, dispatch);
 
         sendLocalParticipant(state, conference);
@@ -364,30 +365,6 @@ export function checkIfCanJoin() {
 export function dataChannelOpened() {
     return {
         type: DATA_CHANNEL_OPENED
-    };
-}
-
-/**
- * Signals that a participant sent an endpoint message on the data channel.
- *
- * @param {JitsiConference} conference - The JitsiConference which had its lock
- * state changed.
- * @param {Object} participant - The participant details sending the message.
- * @param {Object} p - The payload carried in the message.
- * @returns {{
- *      type: ENDPOINT_MESSAGE_RECEIVED,
- *      conference: JitsiConference,
- *      participant,
- *      p
- * }}
- */
-export function endpointMessageReceived(
-        conference: Object, participant: Object, p: Object) {
-    return {
-        type: ENDPOINT_MESSAGE_RECEIVED,
-        conference,
-        participant,
-        p
     };
 }
 
